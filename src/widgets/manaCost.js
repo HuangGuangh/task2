@@ -1,21 +1,17 @@
 import * as d3 from 'd3';
 
 class ManaCost {
-    build(data, element){
-        const margin = {
-            top: 30,
-            right: 30,
-            bottom: 70,
-            left: 60
-        }
+    build(data, element) {
+        const margin = { top: 30, right: 30, bottom: 70, left: 60 };
         const width = 300 - margin.left - margin.right;
         const height = 300 - margin.top - margin.bottom;
+
+        d3.select(element).select("svg").remove();
 
         const svg = d3.select(element)
             .append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
-            .attr('margin', margin.left)
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -35,31 +31,30 @@ class ManaCost {
             .range([height, 0]);
 
         svg.append('g')
-            .call(d3.axisLeft(yAxis))
+            .call(d3.axisLeft(yAxis));
 
-        svg.selectAll("costBar")
-            .data(data)
-            .enter()
+        const bars = svg.selectAll("rect")
+            .data(data, d => d.cost);
+
+        bars.enter()
             .append('rect')
             .attr('x', d => xAxis(d.cost))
-            .attr('y', d => yAxis(d.count))
+            .attr('y', d => yAxis(0))
             .attr('width', xAxis.bandwidth())
-            .attr('height', d =>  height - yAxis(d.count) )
+            .attr('height', 0)
             .attr('fill', "#69b3a2")
+            .transition()
+            .duration(800)
+            .attr('y', d => yAxis(d.count))
+            .attr('height', d => height - yAxis(d.count));
 
-        svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("transform", "rotate(-90)")
-            .attr("y", -margin.left + 20)
-            .attr("x", -height / 2)
-            .text("Number of Cards");
+        bars.transition()
+            .duration(800)
+            .attr('y', d => yAxis(d.count))
+            .attr('height', d => height - yAxis(d.count));
 
-        svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2)
-            .attr("y", height + margin.bottom - 10)
-            .text("Mana Cost");
+        bars.exit().remove();
     }
 }
 
-export {ManaCost}
+export { ManaCost };

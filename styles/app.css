@@ -28,9 +28,16 @@
     background-color: azure;
 }
 
-.cardContainer{
-    height: 50%;
+.cardContainer {
+    height: 45%;
     background-color: dodgerblue;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.cardDetails {
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .statsContainer {

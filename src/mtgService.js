@@ -3,15 +3,16 @@ class MtgService {
         this.baseUrl = baseUrl;
     }
 
-    loadCards(){
-       return  fetch(this.baseUrl + "/cards")
+    loadCards() {
+        return fetch(this.baseUrl + "/cards")
             .then(response => response.json())
-            .then(json => json.cards)
+            .then(json => json.cards);
     }
 
-    // TODO: Implement!
     loadCard(id) {
-
+        return fetch(`${this.baseUrl}/cards/${id}`)
+            .then(response => response.json())
+            .then(json => json.card);
     }
 }
 
